@@ -14,6 +14,24 @@ public class PlayerMove : MonoBehaviour {
 	private bool canMove = false;
 	private bool finishedMovement = true;
 
+	public bool FinishedMovement {
+		get {
+			return finishedMovement;}
+		set {
+			finishedMovement = value;
+		}
+	}
+
+	public Vector3 TargetPosition {
+		get {
+			return targetPos;
+		}
+		set {
+			targetPos = value;
+		}
+	}
+
+
 	// the mouse click point
 	private Vector3 targetPos = Vector3.zero;
 
@@ -121,6 +139,55 @@ public class PlayerMove : MonoBehaviour {
 			playerMove.Set (0f, 0f, 0f);
 			anim.SetFloat ("Walk", 0f);
 		}
+
+
+	}
+
+
+	// use mouse click to move the character
+	void TestSimpleMove () {
+		if (Input.GetMouseButtonDown (0)) {
+			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+			RaycastHit hitinfo;
+
+			if (Physics.Raycast (ray,out hitinfo)) {
+				if (hitinfo.collider is TerrainCollider) {
+
+					// get the targetPos in 3D world
+					Vector3 targetPos = hitinfo.point;
+					targetPos.y = transform.position.y;
+
+				}
+			}
+		}
+
+		// now that we have the point, we need to go there
+		// simple move, this need to pass a speed, e.g. 5 means 5m/s
+		// like the below code
+//		public float speed = 3.0F;
+//		public float rotateSpeed = 3.0F;
+//		void Update() {
+//			CharacterController controller = GetComponent<CharacterController>();
+//			transform.Rotate(0, Input.GetAxis("Horizontal") * rotateSpeed, 0);
+//			Vector3 forward = transform.TransformDirection(Vector3.forward);
+//			float curSpeed = speed * Input.GetAxis("Vertical");
+//			controller.SimpleMove(forward * curSpeed);
+//		}
+
+
+		// Move, this need to pass a move distance in a frame
+		// like the below code
+
+//		if (controller.isGrounded) {
+//			moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+//			moveDirection = transform.TransformDirection(moveDirection);
+//			moveDirection *= speed;
+//			if (Input.GetButton("Jump"))
+//				moveDirection.y = jumpSpeed;
+//
+//		}
+//		moveDirection.y -= gravity * Time.deltaTime;
+//		controller.Move(moveDirection * Time.deltaTime);
 
 
 	}
